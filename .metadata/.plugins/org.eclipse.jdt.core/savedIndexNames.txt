@@ -1,0 +1,3 @@
+INDEX VERSION 1.131+C:\Users\nicoz\Documents\Analista en Sistemas\Diseño de sistemas\Trabajo final\.metadata\.plugins\org.eclipse.jdt.core
+2196199803.index
+237925670.index

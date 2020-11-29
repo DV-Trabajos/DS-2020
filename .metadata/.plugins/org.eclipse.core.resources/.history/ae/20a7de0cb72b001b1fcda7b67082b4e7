@@ -1,0 +1,58 @@
+@startuml
+class Prenda <<Entity>>{
+	TipoPrenda 	tipoPrenda
+	Estado 		estado
+	BigDecimal 	precioBase
+	Integer		cantidad
+	BigDecimal 	precioVenta
+}
+
+note left of Prenda
+precioVenta = estado.precioVenta(precioBase)
+end note
+
+Prenda -left- TipoPrenda
+Prenda -right-> Estado
+
+enum TipoPrenda {
+	SACO,
+	PANTALON,
+	CAMISA
+}
+
+interface Estado {
+	precioVenta(precioBase)
+}
+
+class Nueva {
+	BigDecimal precioVenta(precioBase)
+}
+note left of Nueva
+En este caso 
+no modifican 
+el precio base
+end note
+
+class Promocion {
+	BigDecimal precioVenta(precioBase)
+}
+
+note left of Promocion
+Le resta un valor fijo
+definido por el usuario
+end note
+
+class Liquidacion {
+	BigDecimal precioVenta(precioBase)
+}
+
+note left of Liquidacion
+Es un 50% del valor
+del producto
+end note
+
+Estado ^.. Nueva
+Estado ^.. Promocion
+Estado ^.. Liquidacion
+
+@enduml
