@@ -1,0 +1,182 @@
+@startuml
+
+class Prenda <<Entity>>{
+	TipoPrenda	tipoPrenda
+	Estado     	estado
+	BigDecima  	precioBase
+	Stock		stock
+	
+	Integer    	getCantidad()
+ 	BigDecimal 	precioVenta()
+ 	
+ 	void agregarStock(cantidad)
+ 	void descontarStock(cantidad)
+}
+
+note left of Prenda
+precioVenta = 
+estado.precioVenta(precioBase)
+end note
+
+Prenda -left-> TipoPrenda
+Prenda -right-> Estado
+
+enum TipoPrenda {
+	SACO
+	PANTALON
+	CAMISA
+}
+
+
+interface Estado {
+   precioVenta(precioBase)
+}
+
+class Nueva {
+	BigDecimal precioVenta(PrecioBase)
+}
+note left of Nueva
+No modifican 
+el precio base.
+end note
+
+class Promocion {
+	BigDecimal precioVenta(PrecioBase)
+}
+note left of Promocion
+Le resta un valor fijo 
+decidido por 
+el usuario.
+end note
+
+class Liquidacion {
+	BigDecimal precioVenta(precioBase)
+}
+note left of Liquidacion
+Es un 50% del valor 
+del producto. 
+end note
+
+Estado ^.. Nueva
+Estado ^.. Promocion
+Estado ^.. Liquidacion
+
+
+abstract class Venta {
+	Date fecha
+	Cliente cliente
+	Item items
+	
+	
+	{abstract} BigDecimal recargo()
+	BigDecimal total()
+	boolean esDelDia(fecha)
+	
+	void agregarItem(Prenda, cantidad)
+	void descontarItem(Prenda, cantidad)
+}
+note right of Venta
+total = 
+suma de todos los item.precio + recargo
+end note
+
+
+
+Venta "1" -->  "*" Item
+class Item {
+	Prenda 	prenda
+	Integer cantidad
+	
+	BigDecimal precio()
+	
+	void descontarStock(Prenda, cantidad)
+	void agregarStock(Prenda, cantidad)
+	
+}
+note right of Item
+precio = 
+prenda.precioVenta() * cantidad
+end note
+
+
+Item --> Prenda
+
+
+class PuntoDeVenta {
+	Venta ventas
+	
+	BigDecimal ganaciaDia(fecha)
+}
+
+class Tienda {
+	PuntoDeVenta cajas
+	
+	BigDecimal ganaciaDia(fecha)
+}
+
+
+class Cliente {
+	String nombre
+	String apellido
+}
+
+Venta  <--  Cliente
+Venta ^-- VentaTarjeta
+Venta ^-- VentaMercadoPago
+Venta ^-- VentaEfectivo
+
+
+PuntoDeVenta "0" -right-> "*" Venta
+Tienda "1" -right-> "*" PuntoDeVenta
+
+
+
+class VentaTarjeta {
+	Integer cantidadCuotas
+	BigDecimal coeficienteTarjeta
+	
+	BigDecimal recargo()
+}
+
+note right of VentaTarjeta
+recargo = cantidadCuotas 
+* 
+coeficienteTarjeta
++
+0,01
+ 
+end note
+class VentaMercadoPago {
+	BigDecimal coeficienteMercadoPago
+	
+	BigDecimal recargo()
+}
+note right of VentaMercadoPago
+recargo = 
+coeficienteMercadoPago
+*
+0,02
+end note
+
+
+class VentaEfectivo {
+	BigDecimal recargo()
+}
+note right of VentaEfectivo	
+recargo = 0
+end note
+
+
+class Stock {
+	Integer cantidad
+	
+	Integer getCantidad()
+	
+	void agregarStock(cantidad)
+	void descontarStock(cantidad)
+}
+
+Prenda --> Stock
+
+
+@enduml
