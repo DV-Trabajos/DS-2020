@@ -18,14 +18,13 @@ import ar.edu.davinci.dvds20202cg2.model.TipoPrenda;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-class PrendaRepositoryTest {
+public class PrendaRepositoryTest {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(PrendaRepositoryTest.class);
-	
+
 	@Autowired
 	private PrendaRepository prendaRepository;
 	
-
 	@Test
 	void testFindAll() {
 		assertNotNull(prendaRepository, "El repositorio es nulo.");
@@ -34,18 +33,19 @@ class PrendaRepositoryTest {
 		LOGGER.info("Prendas encontradas: " + prendas.size());
 
 		assertNotNull(prendas, "La lista de prendas es nula.");
-		assertTrue(prendas.size() > 0, "No existen prendas.");
+		assertTrue(prendas.size() > 0, "No existen prendas.");		
 	}
 
 	@Test
-	void testFindAllByIdIterableOfID() {
+	void testFindAllById() {
 		Long id = 4L;
 		Optional<Prenda> prendaOpcional = prendaRepository.findById(id);
 		if (prendaOpcional.isPresent()){
 			Prenda prenda = prendaOpcional.get();
 			
 			LOGGER.info("Prenda encontrada: " + prenda);
-			assertEquals(TipoPrenda.PANTALON, prenda.getTipo());			
+			assertEquals(TipoPrenda.PANTALON, prenda.getTipo());	
 		}
 	}
 }
+
