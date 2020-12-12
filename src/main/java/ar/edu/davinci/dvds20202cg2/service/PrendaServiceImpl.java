@@ -25,7 +25,6 @@ public class PrendaServiceImpl implements PrendaService {
 		this.prendaRepository = prendaRepository;
 	}
 
-
 	@Override
 	public List<Prenda> listAll() {
 		return prendaRepository.findAll();
@@ -46,7 +45,6 @@ public class PrendaServiceImpl implements PrendaService {
 		return null;
 	}
 
-
 	@Override
 	public Prenda save(Prenda prenda) {
 		return prendaRepository.save(prenda);
@@ -57,10 +55,13 @@ public class PrendaServiceImpl implements PrendaService {
 		prendaRepository.delete(prenda);
 	}
 
-
+	@Override
+	public void delete(Long id) {
+		prendaRepository.deleteById(id);
+	}
+	
 	@Override
 	public long count() {
 		return prendaRepository.count();
 	}
-
 }
