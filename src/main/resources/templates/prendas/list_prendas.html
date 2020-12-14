@@ -15,7 +15,7 @@
 				<tr>
 					<th><a href="/tienda">Volver al menú pricipal</a></th>
 					<th>&nbsp;</th>
-					<th><a href="/tienda/prendas/new">Crear un nuevo Cliente</a></th>
+					<th><a href="/tienda/prendas/new">Crear una nueva Prenda</a></th>
 				</tr>
 			</tbody>
 		</table>
@@ -34,7 +34,7 @@
 				<tr th:each="prenda : ${listPrendas}">
 					<td th:text="${prenda.id}">Prenda ID</td>
 					<td th:text="${prenda.descripcion}">Descripcion</td>
-					<td th:text="${prenda.tipo}">Tipo</td>
+					<td th:text="${prenda.tipo.descripcion}">Tipo</td>
 					<td th:text="${prenda.precioBase}">Precio Base</td>
 					<td><a th:href="@{'/tienda/prendas/edit/' + ${prenda.id}}">Editar</a>
 						&nbsp;&nbsp;&nbsp; <a

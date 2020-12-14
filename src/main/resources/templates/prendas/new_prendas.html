@@ -29,7 +29,15 @@
 				</tr>
 				<tr>
 					<td>Tipo:</td>
-					<td><input type="text" th:field="*{tipo}" /></td>
+					<td th:object="${tipoPrendas}">
+					    <select id="tipo" name="tipo">
+					        <option value="">Elija un tipo</option>
+					        <option th:each="tipoPrenda : ${tipoPrendas}"
+					                th:value="${tipoPrenda}"
+					                th:text="${tipoPrenda.descripcion}">
+					        </option>
+					    </select>
+					</td>
 				</tr>
 				<tr>
 					<td>Precio Base:</td>

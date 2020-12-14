@@ -53,6 +53,7 @@ public class PrendaController extends TiendaApp {
 		LOGGER.info("GET - showNewPrendaPage - /prendas/new");
 		Prenda prenda = new Prenda();
 		model.addAttribute("prenda", prenda);
+		model.addAttribute("tipoPrendas", prendaService.getTipoPrendas());
 
 		LOGGER.info("prendas: " + prenda.toString());
 
@@ -76,6 +77,8 @@ public class PrendaController extends TiendaApp {
 		ModelAndView mav = new ModelAndView("prendas/edit_prendas");
 		Prenda prenda = prendaService.findById(prendaId);
 		mav.addObject("prenda", prenda);
+		mav.addObject("tipoPrendas", prendaService.getTipoPrendas());
+		mav.addObject("tipoPrendaActual", prenda.getTipo());
 
 		return mav;
 	}

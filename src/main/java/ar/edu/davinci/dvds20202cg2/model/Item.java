@@ -1,15 +1,16 @@
 package ar.edu.davinci.dvds20202cg2.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -20,44 +21,35 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Prenda
+ * Item de Venta
  * 
  * @author nzalazar, fbotto y mgiron
  *
  */
 
 @Entity
-@Table(name="prendas")
+@Table(name="venta_items")
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Prenda implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1591131176880228892L;
+public class Item {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
 	@GenericGenerator(name = "native", strategy = "native")
-	@Column(name = "prd_id")
+	@Column(name = "itm_id")
 	private Long id;
-	//private Estado estado;
-
-	@Column(name = "prd_precio_base")
-	private BigDecimal precioBase;
 	
-	@Column(name = "prd_tipo_prenda")
-	@Enumerated(EnumType.STRING)
-	private TipoPrenda tipo;
+	@Column(name = "itm_cantidad")
+	private Integer cantidad;
 	
-	@Column(name = "prd_descripcion")
-	private String descripcion;
+	@ManyToOne(targetEntity = Prenda.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name="itm_prd_id", referencedColumnName="prd_id")
+	private Prenda prenda;
 	
-	public BigDecimal getPrecioFinal(){
-		return precioBase; //estado.precioFinal(precioPropio);
+	public BigDecimal importe() {
+		return prenda.getPrecioFinal().multiply(new BigDecimal(cantidad));
 	}
 }
