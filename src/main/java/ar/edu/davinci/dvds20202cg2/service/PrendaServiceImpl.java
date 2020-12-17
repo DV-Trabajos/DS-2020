@@ -39,12 +39,8 @@ public class PrendaServiceImpl implements PrendaService {
 	}
 
 	@Override
-	public Prenda findById(Long id) {
-		Optional<Prenda> prendaOptional = prendaRepository.findById(id);
-		if (prendaOptional.isPresent()) {
-			return prendaOptional.get();
-		}
-		return null;
+	public Optional<Prenda> findById(Long id) {
+		return prendaRepository.findById(id);
 	}
 
 	@Override

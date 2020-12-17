@@ -2,6 +2,7 @@ package ar.edu.davinci.dvds20202cg2.controller.rest;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public class PrendaControllerRest extends TiendaAppRest{
 	 * Listar paginado
 	 */
 	@GetMapping(path = "/prendas")
-	public Page<PrendaResponse> getList(Pageable pageable) {
+	public ResponseEntity<Page<PrendaResponse>> getList(Pageable pageable) {
 		
 		LOGGER.info("listar todas las prendas paginadas");
 		LOGGER.info("Pageable: " + pageable);
@@ -80,7 +81,7 @@ public class PrendaControllerRest extends TiendaAppRest{
 			e.printStackTrace();
 		}
 		
-		return prendaResponse;
+		return new ResponseEntity<>(prendaResponse, HttpStatus.OK);
 	}
 	
 	/**
@@ -89,13 +90,19 @@ public class PrendaControllerRest extends TiendaAppRest{
 	 * @return retorna el prenda
 	 */
 	@GetMapping(path = "/prendas/{id}")
-	public PrendaResponse getPrenda(@PathVariable Long id) {
+	public ResponseEntity<PrendaResponse> getPrenda(@PathVariable Long id) {
 		LOGGER.info("lista al prenda solicitado");
 
 		PrendaResponse prendaResponse = null;
+		Optional<Prenda> prendaOptional = null;
 		Prenda prenda = null;
 		try {
-			prenda = prendaService.findById(id);
+			prendaOptional = prendaService.findById(id);
+			if (prendaOptional.isPresent()) {
+				prenda  = prendaOptional.get();
+			} else {
+				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 			e.printStackTrace();
@@ -106,7 +113,7 @@ public class PrendaControllerRest extends TiendaAppRest{
 			LOGGER.error(e.getMessage());
 			e.printStackTrace();
 		}
-		return prendaResponse;
+		return new ResponseEntity<>(prendaResponse, HttpStatus.OK);
 	}
 
 
@@ -169,8 +176,20 @@ public class PrendaControllerRest extends TiendaAppRest{
 			LOGGER.error(e.getMessage());
 			e.printStackTrace();
 		}
-
-		prendaModifar = prendaService.findById(id);
+		
+		Optional<Prenda> prendaOptional = null;
+		Prenda prenda = null;
+		try {
+			prendaOptional = prendaService.findById(id);
+			if (prendaOptional.isPresent()) {
+				prendaModifar  = prendaOptional.get();
+			} else {
+				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+			e.printStackTrace();
+		}
 
 		if (Objects.nonNull(prendaModifar)) {
 			prendaModifar.setDescripcion(prendaNuevo.getDescripcion());
@@ -183,7 +202,7 @@ public class PrendaControllerRest extends TiendaAppRest{
 				return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
 			}
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 
 		// Convertir Prenda en PrendaResponse
@@ -194,7 +213,7 @@ public class PrendaControllerRest extends TiendaAppRest{
 			e.printStackTrace();
 		}
 
-		return new ResponseEntity<>(prendaResponse, HttpStatus.OK);
+		return new ResponseEntity<>(prendaResponse, HttpStatus.CREATED);
 	}
 
 	/**
@@ -212,4 +231,3 @@ public class PrendaControllerRest extends TiendaAppRest{
 		}
 	}
 }
-

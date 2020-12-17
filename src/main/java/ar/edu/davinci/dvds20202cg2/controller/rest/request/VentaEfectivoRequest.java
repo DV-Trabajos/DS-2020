@@ -1,8 +1,8 @@
 package ar.edu.davinci.dvds20202cg2.controller.rest.request;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import ar.edu.davinci.dvds20202cg2.model.TipoPrenda;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PrendaInsertRequest {
+public class VentaEfectivoRequest {
 	
-	private BigDecimal precioBase;
-	
-	private TipoPrenda tipo;
-	
-	private String descripcion;
+	private Long clienteId;
 }

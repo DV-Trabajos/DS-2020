@@ -1,6 +1,9 @@
 package ar.edu.davinci.dvds20202cg2.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +27,8 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,42 +51,58 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class Venta {
+public abstract class Venta implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7376435139081549781L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
 	@GenericGenerator(name = "native", strategy = "native")
 	@Column(name = "vta_id")
 	private Long id;
 	
-	@ManyToOne(targetEntity = Cliente.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name="vta_cli_id", referencedColumnName="cli_id")
+	@ManyToOne(targetEntity = Cliente.class, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@JoinColumn(name="vta_cli_id", referencedColumnName="cli_id", nullable = false)
 	private Cliente cliente;
 	
 	@Column(name = "vta_fecha")
 	@Temporal(TemporalType.DATE)
 	private Date fecha;
 	
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-	@JoinColumn(name="itm_vta_id", referencedColumnName="vta_id", nullable = false)
+	@OneToMany(mappedBy="venta", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
+	@JsonManagedReference
 	private List<Item> items;
+	
+	public String getRazonSocial() {
+		return cliente.getRazonSocial();
+	}
 	
 	public abstract Double conRecargo(Double importeBase);
 	
 	public BigDecimal importeBruto() {
 		Double suma = items.stream()
 				.collect(Collectors.summingDouble(item -> item.importe().doubleValue()));
-		return new BigDecimal(suma);
+		return new BigDecimal(suma).setScale(2, RoundingMode.UP);
 	}
 
 	// Template Method
 	public BigDecimal importeFinal() {
 		Double suma = items.stream()
 		.collect(Collectors.summingDouble(item -> conRecargo(item.importe().doubleValue())));
-		return new BigDecimal(suma);
+		return new BigDecimal(suma).setScale(2, RoundingMode.UP);
 	}
 	
 	public boolean esDeFecha(Date fecha) {
 		return (this.fecha.compareTo(fecha) == 0) ? true : false;
+	}
+
+	public void addItem(Item item) {
+		if (this.items == null) {
+			this.items = new ArrayList<Item>();
+		}
+		this.items.add(item);
 	}
 }

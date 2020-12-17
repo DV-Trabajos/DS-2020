@@ -104,7 +104,7 @@ CREATE TABLE ventas_efectivo (
 CREATE TABLE ventas_tarjeta (
   vta_id bigint NOT NULL,
   vtt_cantidad_cuotas int DEFAULT NULL,
-  vtt_coeficiente  bigint DEFAULT NULL,
+  vtt_coeficiente  decimal(2,2) DEFAULT NULL,
   PRIMARY KEY (vta_id),
   CONSTRAINT vtt_vta_fk FOREIGN KEY (vta_id) REFERENCES ventas (vta_id)
 );
