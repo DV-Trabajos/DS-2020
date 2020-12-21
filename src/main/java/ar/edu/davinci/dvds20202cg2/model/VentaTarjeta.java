@@ -8,6 +8,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import ar.edu.davinci.dvds20202cg2.model.Venta;
 import ar.edu.davinci.dvds20202cg2.model.VentaTarjeta;
@@ -39,6 +40,7 @@ public class VentaTarjeta extends Venta implements Serializable {
 	private static final long serialVersionUID = -4940343384573345479L;
 
 	@Column(name = "vtt_cantidad_cuotas")
+	@NotNull
 	private Integer cantidadCuotas;
 	
 	@Column(name = "vtt_coeficiente")

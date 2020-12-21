@@ -37,8 +37,7 @@ class PrendaServiceImplTest {
 		LOGGER.info("Prenda size:" + prendas.size());
 
 		assertNotNull(prendas, "Prendas es nulo");
-		assertTrue(prendas.size() > 0, "Prendas está vacio");
-		
+		assertTrue(prendas.size() > 0, "Prendas está vacio");	
 	}
 
 	@Test
@@ -86,7 +85,7 @@ class PrendaServiceImplTest {
 		}		
 		assertNull(prenda);
 	}
-
+	
 	@Test
 	void testSave() {
 		
@@ -104,8 +103,6 @@ class PrendaServiceImplTest {
 		assertEquals(prenda.getDescripcion(), prendaCreada.getDescripcion());
 
 		LOGGER.info("Prenda count después insert: " + prendaService.count());
-		
-		
 	}
 
 	@Test

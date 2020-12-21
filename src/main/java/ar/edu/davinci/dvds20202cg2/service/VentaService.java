@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import ar.edu.davinci.dvds20202cg2.model.Item;
+import ar.edu.davinci.dvds20202cg2.model.TipoVenta;
 import ar.edu.davinci.dvds20202cg2.model.Venta;
 import ar.edu.davinci.dvds20202cg2.model.VentaEfectivo;
 import ar.edu.davinci.dvds20202cg2.model.VentaTarjeta;
@@ -26,4 +27,5 @@ public interface VentaService {
 	public Venta addItem(Long id, Item item) throws Exception;
 	public Venta updateItem(Long ventaId, Long itemId, Item item) throws Exception;
 	public Venta deleteItem(Long ventaId, Long itemId) throws Exception;
+	public List<TipoVenta> getTipoVentas();
 }

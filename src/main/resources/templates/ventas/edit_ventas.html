@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8" />
+	<title>Editar venta</title>
+	
+	<!--JQUERY-->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+ 			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+ 			crossorigin="anonymous">
+	</script>
+	
+	<!-- FRAMEWORK BOOTSTRAP para el estilo de la pagina-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" 
+			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" 
+			crossorigin="anonymous">
+	</script>
+
+	<!-- Iconos tipo Solid de Fontawesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
+	<script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+	
+	<!-- Css -->
+	<link rel="stylesheet" type="text/css" href="static/css/form.css" th:href="@{/css/form.css}">
+</head>
+<body>
+	<div class="container">
+		<div class="mx-auto col-sm-8 main-section">
+			<div class="card">
+				<div class="card-header">
+					<h4>Editar venta</h4>
+				</div>
+				<div class="card-body">
+					<form class="form" role="form" th:object="${venta}" th:action="@{/tienda/ventas/save}" method="post">
+						<div class="form-group row">
+							<label class="col-lg-3 col-form-label 	form-control-label">Venta ID</label>
+							<div class="col-lg-9">
+								<input class="form-control" type="text" th:field="*{id}" readonly="readonly">
+							</div>
+						</div>							
+						<div class="form-group row">
+						<label class="col-lg-3 col-form-label 	form-control-label">Cliente</label>
+							<div class="col-lg-9" th:object="${clientes}">
+							    <select class="form-control" id="client" name="client" disabled>
+		  					        <option value="">Seleccione un cliente</option>
+							        <option th:each="cliente : ${clientes}"
+							                th:value="${cliente.id}"
+							                th:text="${cliente.getRazonSocial()}"
+							                th:selected="${cliente==clienteActual}">
+							        </option>
+							    </select>
+							    <!--<div class="alert-danger" th:if="${#fields.hasErrors('cliente')}" th:errors="*{cliente}">Cliente Error</div>-->
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-lg-3 col-form-label 	form-control-label">Tipo de venta</label>
+							<div class="col-lg-9">
+								<input th:value="${tipoVenta}" id="clienteId" name="clienteId" class="form-control" type="text" readonly="readonly">
+							</div>
+						</div>	
+						<h5>Listado de Items</h5>
+						<!-- Lista de items -->
+						<div class="table-responsive">
+							<table id="itemList" class="table table-bordered table-hover table-striped">
+								<thead class="thead-light">
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Descripción</th>
+									<th scope="col">Cantidad</th>
+									<th scope="col">Importe</th>
+									<th scope="col">Acciones</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr th:each="item : ${listItems}">
+									<td th:text="${item.getId()}">ID</td>
+									<td th:text="${item.getPrenda().getDescripcion()}">Descripción</td>
+									<td th:text="${item.cantidad}">Cantidad</td>
+									<td th:text="${item.importe()}">Importe</td>
+									<td>
+										<a th:href="@{'/tienda/items/edit/' + ${item.id}}"><i class="fas fa-edit"></i></a> | 
+										<a href="#" th:onclick="'javascript:confirmDelete(\''+ ${item.id} +'\');'"><i class="fas fa-trash-alt"></i></a>
+										<!-- <a th:href="@{'/tienda/ventas/deleteItem/' + ${item.id}}"><i class="fas fa-trash-alt"></i></a>	-->
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="form-group row">
+							<div class="col-lg-12 text-center">
+								<a class="btn btn-secondary" href="/tienda/ventas/list">Volver</a>
+								<a class="btn btn-primary" th:href="@{'/tienda/items/add_items/' + ${venta.id}}">Nuevo Item</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="items/confirm-delete-dialog.html" th:remove="tag"></div>
+	<script type="text/javascript">
+		function confirmDelete(id){
+			$('#deleteModal').modal('show');
+			$("#itemIdHiddenInput").val(id);
+		}
+		
+		function deleteItem(){
+			var id = $("#itemIdHiddenInput").val();
+		    window.location = "../deleteItem/"+id;
+		}
+	</script>
+</body>
+</html>

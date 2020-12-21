@@ -2,6 +2,8 @@ package ar.edu.davinci.dvds20202cg2.controller.view;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,10 +58,23 @@ public class ClienteController extends TiendaApp {
 	}
 	
 	@PostMapping(value = "/clientes/save")
-	public String saveCliente(@ModelAttribute("cliente") Cliente cliente) {
+	public String saveCliente(@Valid @ModelAttribute("cliente") Cliente cliente, BindingResult result, ModelMap model) {
 		LOGGER.info("POST - saveCliente - /clientes/save");
 		LOGGER.info("cliente: " + cliente.toString());
-		clienteService.save(cliente);
+		
+		String pageReturn = "";
+		
+		if (result.hasErrors()) {			
+			model.addAttribute("cliente", cliente);
+			
+			//Verifico si es en la edición o nuevo cliente
+			pageReturn = cliente.getId() != null ? "clientes/edit_clientes" : "clientes/new_clientes";
+
+			return pageReturn;
+		} 
+		else {
+			clienteService.save(cliente);
+		}
 
 		return "redirect:/tienda/clientes/list";
 	}

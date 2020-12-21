@@ -2,6 +2,8 @@ package ar.edu.davinci.dvds20202cg2.controller.view;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +26,7 @@ import ar.edu.davinci.dvds20202cg2.controller.TiendaApp;
 import ar.edu.davinci.dvds20202cg2.controller.view.PrendaController;
 import ar.edu.davinci.dvds20202cg2.service.PrendaService;
 import ar.edu.davinci.dvds20202cg2.model.Prenda;
+import ar.edu.davinci.dvds20202cg2.model.TipoPrenda;
 
 @Controller
 public class PrendaController extends TiendaApp {
@@ -55,10 +60,25 @@ public class PrendaController extends TiendaApp {
 	}
 	
 	@PostMapping(value = "/prendas/save")
-	public String savePrenda(@ModelAttribute("prenda") Prenda prenda) {
+	public String savePrenda(@Valid @ModelAttribute("prenda") Prenda prenda, BindingResult result, ModelMap model) {
 		LOGGER.info("POST - savePrenda - /prendas/save");
 		LOGGER.info("prenda: " + prenda.toString());
-		prendaService.save(prenda);
+		
+		String pageReturn = "";
+		
+		if (result.hasErrors()) {			
+			model.addAttribute("prenda", prenda);
+			model.addAttribute("tipoPrendaActual", prenda.getTipo());
+			model.addAttribute("tipoPrendas", prendaService.getTipoPrendas());
+			
+			//Verifico si es en la edición o nueva prenda
+			pageReturn = prenda.getId() != null ? "prendas/edit_prendas" : "prendas/new_prendas";
+
+			return pageReturn;
+		} 
+		else {
+			prendaService.save(prenda);
+		}
 
 		return "redirect:/tienda/prendas/list";
 	}
@@ -70,7 +90,8 @@ public class PrendaController extends TiendaApp {
 
 		ModelAndView mav = new ModelAndView("prendas/edit_prendas");
 		Optional<Prenda> prendaOptional = prendaService.findById(prendaId);
-		Prenda prenda = null;
+		Prenda prenda = null;		
+		
 		if (prendaOptional.isPresent()) {
 			prenda  = prendaOptional.get();
 			mav.addObject("prenda", prenda);

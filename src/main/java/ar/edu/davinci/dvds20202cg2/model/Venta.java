@@ -24,8 +24,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -66,10 +68,13 @@ public abstract class Venta implements Serializable {
 	
 	@ManyToOne(targetEntity = Cliente.class, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinColumn(name="vta_cli_id", referencedColumnName="cli_id", nullable = false)
+	@NotNull
 	private Cliente cliente;
 	
 	@Column(name = "vta_fecha")
 	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern="dd-MM-yyyy")
+	@NotNull
 	private Date fecha;
 	
 	@OneToMany(mappedBy="venta", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -93,6 +98,10 @@ public abstract class Venta implements Serializable {
 		Double suma = items.stream()
 		.collect(Collectors.summingDouble(item -> conRecargo(item.importe().doubleValue())));
 		return new BigDecimal(suma).setScale(2, RoundingMode.UP);
+	}
+	
+	public String getImporteFinalStr() {
+		return importeFinal().toString();
 	}
 	
 	public boolean esDeFecha(Date fecha) {

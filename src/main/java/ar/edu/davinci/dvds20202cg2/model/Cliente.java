@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -37,9 +39,11 @@ public class Cliente implements Serializable {
 	private Long id;
 	
 	@Column(name = "cli_nombre")
+	@NotEmpty(message = "El nombre no puede estar vacío")
 	private String nombre;
 
 	@Column(name = "cli_apellido")
+	@NotEmpty(message = "El apellido no puede estar vacío")
 	private String apellido;
 	
 	public String getRazonSocial() {

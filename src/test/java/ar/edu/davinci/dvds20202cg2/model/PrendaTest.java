@@ -29,5 +29,4 @@ class PrendaTest {
 		assertEquals(tipo, prenda.getTipo());
 		assertEquals(precio, prenda.getPrecioBase());		
 	}
-
 }

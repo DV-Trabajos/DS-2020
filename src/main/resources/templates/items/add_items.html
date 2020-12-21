@@ -3,7 +3,7 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8" />
-	<title>Crear nueva prenda</title>
+	<title>Editar prenda</title>
 	
 	<!--JQUERY-->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -32,41 +32,40 @@
 		<div class="mx-auto col-sm-8 main-section">
 			<div class="card">
 				<div class="card-header">
-					<h4>Crear una nueva Prenda</h4>
+					<h4>Agregar items</h4>
 				</div>
 				<div class="card-body">
-					<form class="form" role="form" th:object="${prenda}" th:action="@{/tienda/prendas/save}" method="post">
+					<form class="form" role="form" th:object="${item}" th:action="@{/tienda/ventas/saveItems}" method="post">
 						<div class="form-group row">
-							<label class="col-lg-3 col-form-label 	form-control-label">Descripción</label>
+							<label class="col-lg-3 col-form-label 	form-control-label">Venta ID</label>
 							<div class="col-lg-9">
-								<input class="form-control" type="text" th:field="*{descripcion}" th:disabled="${disableFields}">
-								<div class="alert-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}">Descripción Error</div>
+								<input class="form-control" type="text" th:value="${ventaId}" id="ventaId" name="ventaId" readonly="readonly">
 							</div>
-						</div>						
+						</div>
 						<div class="form-group row">
-							<label class="col-lg-3 col-form-label 	form-control-label">Tipo</label>
-							<div class="col-lg-9" th:object="${tipoPrendas}">
-							    <select class="form-control" id="tipo" name="tipo">
-		  					        <option value="">Elija un tipo</option>
-							        <option th:each="tipoPrenda : ${tipoPrendas}"
-							                th:value="${tipoPrenda}"
-							                th:text="${tipoPrenda.descripcion}"
-							                th:selected="${tipoPrenda==tipoPrendaActual}">
+							<label class="col-lg-3 col-form-label 	form-control-label">Cantidad</label>
+							<div class="col-lg-9">
+								<input class="form-control" type="text" th:field="*{cantidad}" th:disabled="${disableFields}">
+								<div class="alert-danger" th:if="${#fields.hasErrors('cantidad')}" th:errors="*{cantidad}">Cantidad Error</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-lg-3 col-form-label 	form-control-label">Prendas</label>
+							<div class="col-lg-9" th:object="${prenda}">
+							    <select class="form-control" id="prenda" name="prenda">
+		  					        <option value="">Seleccione una prenda</option>
+							        <option th:each="prenda : ${prendas}"
+							                th:value="${prenda.Id}"
+							                th:text="${prenda.getDescripcion()}"
+							                th:selected="${prenda==prenda}">
 							        </option>
 							    </select>
 							    <!--<div class="alert-danger" th:if="${#fields.hasErrors('tipoPrendas')}" th:errors="*{tipoPrendas}">Tipo prenda Error</div>-->
-							</div>							
-						</div>						
-						<div class="form-group row">
-							<label class="col-lg-3 col-form-label 	form-control-label">Precio base</label>
-							<div class="col-lg-9">
-								<input class="form-control" type="text" th:field="*{precioBase}" th:disabled="${disableFields}">
-								<div class="alert-danger" th:if="${#fields.hasErrors('precioBase')}" th:errors="*{precioBase}">Precio base Error</div>
 							</div>
 						</div>
 						<div class="form-group row">
 							<div class="col-lg-12 text-center">
-								<a class="btn btn-secondary" href="/tienda/prendas/list">Cancelar</a>
+								<a class="btn btn-secondary" href="/tienda/ventas/list">Cancelar</a>
 								<input type="submit" class="btn btn-primary" value="Guardar">
 							</div>
 						</div>

@@ -11,6 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -48,13 +51,16 @@ public class Prenda implements Serializable{
 	//private Estado estado;
 
 	@Column(name = "prd_precio_base")
+	@NotNull(message="El precio base es obligatorio")
 	private BigDecimal precioBase;
 	
 	@Column(name = "prd_tipo_prenda")
-	@Enumerated(EnumType.STRING)
+	@NotNull(message="Debe seleccionar un valor de la lista")
+	@Enumerated(EnumType.STRING)	
 	private TipoPrenda tipo;
 	
 	@Column(name = "prd_descripcion")
+	@NotEmpty(message = "La descripción no puede estar vacía")
 	private String descripcion;
 	
 	public BigDecimal getPrecioFinal(){

@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import ar.edu.davinci.dvds20202cg2.model.Cliente;
 import ar.edu.davinci.dvds20202cg2.model.Item;
 import ar.edu.davinci.dvds20202cg2.model.Prenda;
+import ar.edu.davinci.dvds20202cg2.model.TipoPrenda;
+import ar.edu.davinci.dvds20202cg2.model.TipoVenta;
 import ar.edu.davinci.dvds20202cg2.model.Venta;
 import ar.edu.davinci.dvds20202cg2.model.VentaEfectivo;
 import ar.edu.davinci.dvds20202cg2.model.VentaTarjeta;
@@ -72,7 +74,6 @@ public class VentaServiceImpl implements VentaService {
 		return ventaRepository.findById(id);
 	}
 	
-
 	@Override
 	public VentaEfectivo save(VentaEfectivo venta) throws Exception {
 
@@ -207,7 +208,6 @@ public class VentaServiceImpl implements VentaService {
 		return venta;
 	}
 
-
 	private List<Item> getItems(List<Item> requestItems) throws Exception {
 		List<Item> items = new ArrayList<Item>();
 		for (Item requestItem : requestItems) {
@@ -261,5 +261,10 @@ public class VentaServiceImpl implements VentaService {
 		} else {
 			throw new Exception("Cliente no encotrado");
 		}
+	}
+
+	@Override
+	public List<TipoVenta> getTipoVentas() {
+		return TipoVenta.getTipoVentas();
 	}
 }
