@@ -180,6 +180,7 @@ public class VentaController extends TiendaApp {
 		LOGGER.info("POST - saveVenta - /ventas/save");
 		LOGGER.info("cliente: " + cliente.toString());
 		
+		Venta venta = null;
 		String pageReturn = "";
 		
 		if (result.hasErrors()) {
@@ -199,7 +200,7 @@ public class VentaController extends TiendaApp {
 				ventaEfectivo.setCliente(cliente);
 				//ventaEfectivo.setFecha(today());
 				try {
-					ventaService.save(ventaEfectivo);
+					venta = ventaService.save(ventaEfectivo);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -211,7 +212,7 @@ public class VentaController extends TiendaApp {
 				//ventaTarjeta.setFecha(fecha);
 				ventaTarjeta.setCoeficienteTarjeta(new BigDecimal(0.5));
 				try {
-					ventaService.save(ventaTarjeta);
+					venta = ventaService.save(ventaTarjeta);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -223,7 +224,8 @@ public class VentaController extends TiendaApp {
 			}			
 		}
 		
-		return "redirect:/tienda/ventas/list";
+		//return "redirect:/tienda/ventas/list";
+		return "redirect:/tienda/ventas/edit/" + venta.getId();
 	}
 	
 	@RequestMapping(value = "/ventas/edit/{id}", method = RequestMethod.GET)
